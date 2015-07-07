@@ -48,6 +48,13 @@ start:
 	mov word [os_Screen_Cursor_Col], 0
 	mov rsi, readymsg
 	call os_output
+	pop ax
+	sub ax, 1
+	mov word [os_Screen_Cursor_Row], ax
+	mov word [os_Screen_Cursor_Col], 0
+
+	mov rax, os_command_line	; Start the CLI
+	call os_smp_enqueue
 
 	; Fall through to ap_clear as align fills the space with No-Ops
 	; At this point the BSP is just like one of the AP's
@@ -130,9 +137,11 @@ ap_process:				; Set the status byte to "Busy" and run the code
 %include "syscalls.asm"
 %include "drivers.asm"
 %include "interrupt.asm"
+%include "cli.asm"
+%include "font.asm"
 %include "sysvar.asm"			; Include this last to keep the read/write variables away from the code
 
-times 10240-($-$$) db 0			; Set the compiled kernel binary to at least this size in bytes
+times 16384-($-$$) db 0			; Set the compiled kernel binary to at least this size in bytes
 
 ; =============================================================================
 ; EOF
