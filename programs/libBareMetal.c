@@ -92,81 +92,42 @@ unsigned long b_mem_release(unsigned long *mem, unsigned long nbr)
 }
 
 
-void b_ethernet_tx(void *mem, unsigned long len)
+void b_ethernet_tx(void *mem, unsigned long len, unsigned long iid)
 {
-	asm volatile ("call *0x00100060" : : "S"(mem), "c"(len));
+	asm volatile ("call *0x00100060" : : "S"(mem), "c"(len), "d"(iid));
 }
 
-unsigned long b_ethernet_rx(void *mem)
+unsigned long b_ethernet_rx(void *mem, unsigned long iid)
 {
 	unsigned long tlong;
-	asm volatile ("call *0x00100068" : "=c"(tlong) : "D"(mem));
+	asm volatile ("call *0x00100068" : "=c"(tlong) : "D"(mem), "d"(iid));
 	return tlong;
 }
 
-
-unsigned long b_file_open(const unsigned char *name)
+unsigned long b_disk_read(unsigned long start, unsigned long num, unsigned long disknum, void *dest)
 {
 	unsigned long tlong;
-	asm volatile ("call *0x00100070" : "=a"(tlong) : "S"(name));
+	asm volatile ("call *0x00100070" : "=c"(tlong) : "a"(start), "c"(num), "d"(disknum), "D"(dest));
 	return tlong;
 }
 
-unsigned long b_file_close(unsigned long handle)
+unsigned long b_disk_write(unsigned long start, unsigned long num, unsigned long disknum, void *source)
 {
 	unsigned long tlong = 0;
-	asm volatile ("call *0x00100078" : : "a"(handle));
+	asm volatile ("call *0x00100078" : "=c"(tlong) : "a"(start), "c"(num), "d"(disknum), "S"(source));
 	return tlong;
 }
-
-unsigned long b_file_read(unsigned long handle, void *buf, unsigned int count)
-{
-	unsigned long tlong;
-	asm volatile ("call *0x00100080" : "=c"(tlong) : "a"(handle), "D"(buf), "c"(count));
-	return tlong;
-}
-
-unsigned long b_file_write(unsigned long handle, const void *buf, unsigned int count)
-{
-	unsigned long tlong;
-	asm volatile ("call *0x00100088" : "=c"(tlong) : "a"(handle), "S"(buf), "c"(count));
-	return tlong;
-}
-
-/*
-unsigned long b_file_create(const char *name, unsigned long size)
-{
-	unsigned long tlong;
-	asm volatile ("call *0x001000F8" : : "S"(name), "c"(size));
-	return tlong;
-}
-
-unsigned long b_file_delete(const unsigned char *name)
-{
-	unsigned long tlong;
-	asm volatile ("call *0x00100108" : : "S"(name));
-	return tlong;
-}
-
-unsigned long b_file_query(const unsigned char *name)
-{
-	unsigned long tlong;
-	asm volatile ("call *0x00100118" : : "S"(name));
-	return tlong;
-}
-*/
-
 
 unsigned long b_system_config(unsigned long function, unsigned long var)
 {
 	unsigned long tlong;
-	asm volatile ("call *0x001000B0" : "=a"(tlong) : "d"(function), "a"(var));
+	asm volatile ("call *0x00100080" : "=a"(tlong) : "d"(function), "a"(var));
 	return tlong;
 }
 
 void b_system_misc(unsigned long function, void* var1, void* var2)
 {
-	asm volatile ("call *0x001000B8" : : "d"(function), "a"(var1), "c"(var2));
+	asm volatile ("call *0x00100088" : : "d"(function), "a"(var1), "c"(var2));
 }
 
 
