@@ -5,11 +5,6 @@
 ; COMMAND LINE INTERFACE
 ; =============================================================================
 
-align 16
-db 'DEBUG: CLI      '
-align 16
-
-
 os_command_line:
 	mov rsi, prompt			; Prompt for input
 	mov ebx, 0x00FF0000		; Red prompt in graphics mode

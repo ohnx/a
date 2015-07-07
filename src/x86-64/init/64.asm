@@ -23,10 +23,37 @@ init_64:
 	je nographics
 	; It is, so call init_screen
 	call init_screen
+
 nographics:
+
 	mov word [os_Screen_Cursor_Row], 0
 	mov word [os_Screen_Cursor_Col], 0
-	call os_screen_clear
+	call os_screen_clear		; Clear screen and display cursor
+
+	; Display CPU information
+	mov ax, [os_Screen_Rows]
+	sub ax, 5
+	mov word [os_Screen_Cursor_Row], ax
+	mov word [os_Screen_Cursor_Col], 0
+	mov rsi, cpumsg
+	call os_output
+	xor eax, eax
+	mov rsi, 0x5012
+	lodsw
+	mov rdi, os_temp_string
+	mov rsi, rdi
+	call os_int_to_string
+	call os_output
+	mov rsi, coresmsg
+	call os_output
+	mov rsi, 0x5010
+	lodsw
+	mov rdi, os_temp_string
+	mov rsi, rdi
+	call os_int_to_string
+	call os_output
+	mov rsi, mhzmsg
+	call os_output
 
 	; Create the 64-bit IDT (at linear address 0x0000000000000000) as defined by Pure64
 	xor rdi, rdi
@@ -34,6 +61,7 @@ nographics:
 	; Create exception gate stubs (Pure64 has already set the correct gate markers)
 	mov rcx, 32
 	mov rax, exception_gate
+
 make_exception_gate_stubs:
 	call create_gate
 	add rdi, 1
@@ -183,6 +211,17 @@ skip_ap:
 	jmp next_ap
 no_more_aps:
 
+	; Display memory information
+	mov rsi, memmsg
+	call os_output
+	mov eax, [os_MemAmount]		; In MiB's
+	mov rdi, os_temp_string
+	mov rsi, rdi
+	call os_int_to_string
+	call os_output
+	mov rsi, mibmsg
+	call os_output
+	
 	; Enable specific interrupts
 	mov al, 0x01			; Keyboard IRQ
 	call os_pic_mask_clear

@@ -5,10 +5,6 @@
 ; Basic font definition
 ; =============================================================================
 
-align 16
-db 'DEBUG: FONT     '
-align 16
-
 ; Fonts are defined in HxW (Pixel height x Pixel width)
 ; 12x6 padded to 12x8
 
