@@ -14,7 +14,7 @@
 %include "syscalls/net.asm"
 %include "syscalls/screen.asm"
 %include "syscalls/smp.asm"
-
+%include "syscalls/string.asm"
 
 ; =============================================================================
 ; EOF
