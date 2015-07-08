@@ -53,11 +53,13 @@ os_command_line:
 	call os_string_compare
 	jc reboot
 
+	mov rdi, runapp_string		; 'RUN' entered?
+	call os_string_compare
+	jc near runapp
+
 	mov rdi, testzone_string	; 'TESTZONE' entered?
 	call os_string_compare
 	jc near testzone
-
-	jmp os_command_line		; Jump back to the CLI on program completion
 
 fail:					; We didn't get a valid command or program name
 	mov rsi, not_found_msg
@@ -68,6 +70,15 @@ print_help:
 	mov rsi, help_text
 	call os_output
 	jmp os_command_line
+
+runapp:					; Load an app, a horrible way to do so...
+	mov rcx, 256			; 1M ought to do it, right? (it's actually the limit now)
+	mov rax, 256			; Beautiful. Hardcoded file location. 256 sector is 256bytes*4=1048576 bytes=1MiB
+	mov rax, 0			; Hardcoded Disk
+	mov rdi, managerlocation	; Manager RAM location
+	call os_disk_read
+	call managerlocation
+	jmp os_command_line		; jump back after program execution
 
 clear_screen:
 	call os_screen_clear
@@ -130,7 +141,7 @@ exit:
 
 ; Strings
 	help_text		db 'Built-in commands: CLS, DEBUG, HELP, REBOOT, VER', 13, 0
-	not_found_msg		db 'Command or program not found', 13, 0
+	not_found_msg		db 'Command not valid, please use help for help', 13, 0
 	version_msg		db 'BareMetal OS ', BAREMETAL_VER, 13, 0
 
 	cls_string		db 'cls', 0
@@ -139,6 +150,7 @@ exit:
 	help_string		db 'help', 0
 	debug_string		db 'debug', 0
 	reboot_string		db 'reboot', 0
+	runapp_string		db 'run', 0
 	testzone_string		db 'testzone', 0
 
 	appextension:		db '.app', 0

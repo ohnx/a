@@ -41,23 +41,26 @@ void b_output_chars(const char *str,unsigned long nbr);
 void b_output(const char *str);
 
 // Index for b_system_config calls
-#define timecounter 0
-#define config_argc 1
-#define config_argv 2
-#define networkcallback_get 3
-#define networkcallback_set 4
-#define clockcallback_get 5
-#define clockcallback_set 6
-#define statusbar 10
+#define TIMECOUNTER		0
+#define GET_ARGC		1
+#define GET_ARGV		2
+#define NETWORKCALLBACK_GET	3
+#define NETWORKCALLBACK_SET	4
+#define CLOCKCALLBACK_GET	5
+#define CLOCKCALLBACK_SET	6
+#define MAC			30
 
 // Index for b_system_misc calls
-#define smp_get_id 1
-#define smp_lock 2
-#define smp_unlock 3
-#define debug_dump_mem 4
-#define debug_dump_rax 5
-#define get_argc 6
-#define get_argv 7
+#define SMP_GET_ID		1
+#define SMP_LOCK		2
+#define SMP_UNLOCK		3
+#define DEBUG_DUMP_MEM		4
+#define DEBUG_DUMP_RAX		5
+#define DELAY			6
+#define ETHERNET_STATUS		7
+#define MEM_GET_FREE		8
+#define SMP_NUMCORES		9
+#define SMP_QUELEN		10
 
 #endif
 // =============================================================================

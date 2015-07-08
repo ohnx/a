@@ -51,8 +51,9 @@ os_eth_rx_buffer:	equ 0x00000000001C8000
 os_ethernet_tx_buffer:	equ 0x00000000001D0000
 os_eth_tx_buffer:	equ 0x00000000001D8000
 cpustatus:		equ 0x00000000001FEF00	; Location of CPU status data (256 bytes) Bit 0 = Available, Bit 1 = Free/Busy
-cpuqueue:		equ 0x00000000001FF000	; Location of CPU Queue. Each queue item is 16 bytes. (4KiB before the 2MiB mark, Room for 256 entries)
-programlocation:	equ 0x0000000000200000	; Location in memory where programs are loaded (the start of 2MiB)
+cpuqueue:		equ 0x00000000001FF000	; Location of CPU Queue. Each queue item is 16 bytes. (4KiB before the 2MiB mark, room for 256 entries)
+managerlocation:	equ 0x0000000000200000	; Location in memory where manager is loaded (the start of 2MiB, room for 1MiB of program)
+programlocation:	equ 0x0000000000300000	; Location in memory where programs are loaded (the start of 3MiB)
 
 ; DQ - Starting at offset 0, increments by 8
 os_LocalAPICAddress:	equ os_SystemVariables + 0
