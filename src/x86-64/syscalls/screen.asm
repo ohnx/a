@@ -200,7 +200,7 @@ os_output_chars_tab_next:
 	jne os_output_chars_tab_next
 	pop rcx
 	jmp os_output_chars_nextchar
-
+	
 os_output_chars_done:
 	pop rax
 	pop rcx
@@ -225,6 +225,10 @@ os_screen_scroll:
 
 	xor ecx, ecx
 
+	cmp byte [os_VideoEnabled], 1
+	je os_screen_scroll_graphics
+	
+os_screen_scroll_text:
 	mov rsi, os_screen 		; Start of video text memory for row 2
 	add rsi, 0xA0
 	mov rdi, os_screen 		; Start of video text memory for row 1
@@ -236,6 +240,7 @@ os_screen_scroll:
 	mov cx, 80
 	rep stosw			; Store word in AX to RDI, RCX times
 	call os_screen_update
+	jmp os_screen_scroll_done
 
 os_screen_scroll_done:
 	popfq
@@ -261,6 +266,10 @@ os_screen_clear:
 
 	xor ecx, ecx
 
+	cmp byte [os_VideoEnabled], 1
+	je os_screen_clear_graphics
+
+os_screen_clear_text:
 	mov ax, 0x0720			; 0x07 for black background/white foreground, 0x20 for space (black) character
 	mov rdi, os_screen		; Address for start of frame buffer
 	mov cx, 2000			; 80 x 25
