@@ -42,6 +42,7 @@ start:
 	call init_pci			; Initialize the PCI bus
 	call init_hdd			; Initialize the disk
 	call init_net			; Initialize the network
+	call init_screen		; Initialize screen
 
 	mov ax, [os_Screen_Rows]	; Display the "ready" message and reset cursor to bottom left
 	sub ax, 1
