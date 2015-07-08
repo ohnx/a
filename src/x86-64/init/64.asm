@@ -16,6 +16,12 @@ init_64:
 	; Set screen variables and clear screen
 	mov word [os_Screen_Rows], 25
 	mov word [os_Screen_Cols], 80
+	mov rsi, 0x5080
+	lodsd
+	cmp eax, 0
+	je nographics
+	call init_screen
+nographics:
 	mov word [os_Screen_Cursor_Row], 0
 	mov word [os_Screen_Cursor_Col], 0
 	call os_screen_clear
