@@ -34,6 +34,7 @@ kernel_start:
 	dq os_disk_write		; 0x0078
 	dq os_system_config		; 0x0080
 	dq os_system_misc		; 0x0088
+	dq os_
 	align 16
 
 start:
@@ -130,6 +131,7 @@ ap_process:				; Set the status byte to "Busy" and run the code
 %include "syscalls.asm"
 %include "drivers.asm"
 %include "interrupt.asm"
+%include "graphics.asm"
 %include "sysvar.asm"			; Include this last to keep the read/write variables away from the code
 
 times 10240-($-$$) db 0			; Set the compiled kernel binary to at least this size in bytes
