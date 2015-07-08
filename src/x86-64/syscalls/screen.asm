@@ -81,24 +81,11 @@ os_print_newline_done:
 ;  IN:	RSI = message location (zero-terminated string)
 ; OUT:	All registers preserved
 os_output:
-	push rdi
 	push rcx
-	push rax
-
-	xor ecx, ecx
-	xor eax, eax
-	mov rdi, rsi
-	not rcx
-	cld
-	repne scasb			; compare byte at RDI to value in AL
-	not rcx
-	dec rcx
-
+	call os_string_length
 	call os_output_chars
 
-	pop rax
 	pop rcx
-	pop rdi
 	ret
 ; -----------------------------------------------------------------------------
 
@@ -113,7 +100,11 @@ os_output_char:
 	push rcx
 	push rbx
 	push rax
+	; Check if graphics is enabled
+	cmp byte [os_VideoEnabled], 1
+	je os_output_char_graphics
 
+os_output_char_text:
 	mov ah, 0x07			; Store the attribute into AH so STOSW can be used later on
 
 	push rax
@@ -142,8 +133,11 @@ os_output_char_done:
 	pop rdx
 	pop rdi
 	ret
-; -----------------------------------------------------------------------------
+	
+os_output_char_graphics:
+	call os_glyph_put
 
+; -----------------------------------------------------------------------------
 
 ; -----------------------------------------------------------------------------
 ; os_output_chars -- Displays text
