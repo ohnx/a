@@ -241,7 +241,8 @@ os_system_misc_reset_skip_ap:
 	jmp os_system_misc_reset_next_ap
 os_system_misc_reset_no_more_aps:
 	call init_memory_map		; Clear memory table
-	call done_init
+	mov rax, os_done_init		; Call whatever needs to be called
+	call os_smp_enqueue
 	int 0x81			; Reset this core
 ; -----------------------------------------------------------------------------
 
