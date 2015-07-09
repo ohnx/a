@@ -43,13 +43,8 @@ start:
 	call init_hdd			; Initialize the disk
 	call init_net			; Initialize the network
 	call init_screen		; Initialize screen
-
-	mov ax, [os_Screen_Rows]	; Display the "ready" message and reset cursor to bottom left
-	sub ax, 1
-	mov word [os_Screen_Cursor_Row], ax
-	mov word [os_Screen_Cursor_Col], 0
-	mov rsi, readymsg
-	call os_output
+	
+	jmp done_init			; Jump to finished init
 
 	; Fall through to ap_clear as align fills the space with No-Ops
 	; At this point the BSP is just like one of the AP's
@@ -133,6 +128,7 @@ ap_process:				; Set the status byte to "Busy" and run the code
 %include "drivers.asm"
 %include "interrupt.asm"
 %include "graphics.asm"
+%include "startup.asm"
 %include "sysvar.asm"			; Include this last to keep the read/write variables away from the code
 
 times 10240-($-$$) db 0			; Set the compiled kernel binary to at least this size in bytes
