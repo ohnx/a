@@ -7,5 +7,5 @@ done_init:
 	mov rsi, readymsg
 	call os_output
 do_nothing:
-  hlt
-  jmp do_nothing
+	hlt
+	jmp do_nothing
